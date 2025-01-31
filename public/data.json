@@ -1,0 +1,58 @@
+{
+    "tournament": {
+        "ongoing": true,
+        "tournament_name": "First Tournament Placeholder",
+        "description": "Sample description, this is a test, with another sample description, and just one more sample description",
+        "timer": "2025-02-03T00:00:00Z",
+        "entry": 0,
+        "sponsored": true,
+        "sponsored_by": "Saf",
+        "prizePool": 20,
+        "freeSeatLink": "https://ptb.discord.com/channels/1331351023704473691/1334664421678518293",
+        "paidSeatLink": "placeholder_for_paid_seat_link"
+    },
+    "pastTournaments": [
+        {
+            "tournament_name": "Tournament 1",
+            "date": "2024-08-01",
+            "description": "Sample description, this is a test",
+            "winner": "DrSaf",
+            "score": 3000
+        },
+        {
+            "tournament_name": "Tournament 2",
+            "date": "2024-08-01",
+            "description": "Sample description, this is a test",
+            "winner": "DrSaf",
+            "score": 2500
+        },
+        {
+            "tournament_name": "Tournament 3",
+            "date": "2024-08-01",
+            "description": "Sample adsasdescription, this is a test",
+            "winner": "Shennaine",
+            "score": 4000
+        },
+        {
+            "tournament_name": "Tournament 4",
+            "date": "2024-08-01",
+            "description": "Sample description, this is a test",
+            "winner": "Ainyra",
+            "score": 4000
+        },
+        {
+            "tournament_name": "Tournament 5",
+            "date": "2024-08-01",
+            "description": "Sample description, this is a test",
+            "winner": "DrSaf",
+            "score": 4000
+        },
+        {
+            "tournament_name": "Tournament 6",
+            "date": "2024-08-01",
+            "description": "Sample description, this is a test",
+            "winner": "Shennaine",
+            "score": 4000
+        }
+    ]
+}
