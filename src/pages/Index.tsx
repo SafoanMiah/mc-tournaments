@@ -4,9 +4,9 @@ import Navigation from "../components/Navigation";
 import { fetchData, calculateLeaderboard } from "./dataService";
 
 function calculateTimeLeft(timer: string) {
-  const eventDate = new Date(timer);
+  const tournamentDate = new Date(timer);
   const currentDate = new Date();
-  const difference = eventDate.getTime() - currentDate.getTime();
+  const difference = tournamentDate.getTime() - currentDate.getTime();
 
   if (difference <= 0) return "0d 0h 0m";
 
@@ -18,30 +18,28 @@ function calculateTimeLeft(timer: string) {
 }
 
 const Index = () => {
-  const [eventData, setEventData] = useState(null);
+  const [data, setData] = useState({ tournament: null, pastTournaments: [] });
   const [leaderboard, setLeaderboard] = useState([]);
-  const [pastEvents, setPastEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState<{ title: string; message: React.ReactNode; link: string }>({ title: "", message: "", link: "" });
   const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadData() {
-      const data = await fetchData();
-      if (data) {
-        setEventData(data.event);
-        setLeaderboard(calculateLeaderboard(data.pastEvents));
-        setPastEvents(data.pastEvents);
+      const fetchedData = await fetchData();
+      if (fetchedData) {
+        setData(fetchedData);
+        setLeaderboard(calculateLeaderboard(fetchedData.pastTournaments));
       }
     }
     loadData();
   }, []);
 
-  if (!eventData) {
+  if (!data.tournament) {
     return <div>Loading...</div>;
   }
 
-  const { ongoing, event_name, description, timer, entry, sponsored, prizePool, freeSeatLink, paidSeatLink } = eventData;
+  const { ongoing, tournament_name, description, timer, entry, sponsored, prizePool, freeSeatLink, paidSeatLink } = data.tournament;
 
   const timeLeft = ongoing ? calculateTimeLeft(timer) : "0d 0h 0m";
   const prizePoolDisplay = ongoing ? `$${prizePool}` : "$0";
@@ -51,7 +49,7 @@ const Index = () => {
     if (sponsored) {
       setModalContent({
         title: "Join Instructions",
-        message: "Follow instructions in the #join channel to enter, you must re-enter every event.",
+        message: "Follow instructions in the #join channel to enter, you must re-enter every tournament.",
         link: freeSeatLink
       });
     } else {
@@ -59,9 +57,9 @@ const Index = () => {
         title: "Join Instructions",
         message: (
           <>
-            This event is not sponsored. Entering as a free seat will exempt you from winning the prize pool.<br />
+            This tournament is not sponsored. Entering as a free seat will exempt you from winning the prize pool.<br />
             For that, you must enter as a paid seat.<br /><br />
-            Follow instructions in the #join channel to enter, you must re-enter every event.
+            Follow instructions in the #join channel to enter, you must re-enter every tournament.
           </>
         ),
         link: freeSeatLink
@@ -74,7 +72,7 @@ const Index = () => {
     if (sponsored) {
       setModalContent({
         title: "Notice",
-        message: "Cannot enter as paid in sponsored events.",
+        message: "Cannot enter as paid in sponsored tournaments.",
         link: ""
       });
       setShowModal(true);
@@ -84,19 +82,13 @@ const Index = () => {
     }
   };
 
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
-  const togglePlayerEvents = (playerName: string) => {
-    setExpandedPlayer(expandedPlayer === playerName ? null : playerName);
+  const togglePlayerTournaments = (player: string) => {
+    setExpandedPlayer(expandedPlayer === player ? null : player);
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       <Navigation />
-
-      {/* Hero Section */}
       <div className="pt-24 pb-12 container mx-auto px-4">
         <div
           className="glass-card p-8 text-center animate-fade-in relative overflow-hidden"
@@ -109,7 +101,7 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-purple-500/10 mix-blend-overlay"></div>
 
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-yellow-300 text-transparent bg-clip-text relative z-10">
-            {ongoing ? event_name : "No Active Events"}
+            {ongoing ? tournament_name : "No Active Tournaments"}
           </h1>
 
           {/* Description */}
@@ -122,11 +114,11 @@ const Index = () => {
             <div className="text-5xl md:text-7xl font-bold text-white m-2">{timeLeft}</div>
           </div>
 
-          {/* Event Stats */}
+          {/* Tournament Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="flex items-center justify-center space-x-3">
               <Users className="w-6 h-6 text-green-400" />
-              <span className="text-xl">Sponsor: {sponsored ? eventData.sponsored_by : "No Sponsor"}</span>
+              <span className="text-xl">Sponsor: {sponsored ? data.tournament.sponsored_by : "No Sponsor"}</span>
             </div>
             <div className="flex items-center justify-center space-x-3">
               <Trophy className="w-6 h-6 text-yellow-400" />
@@ -175,7 +167,7 @@ const Index = () => {
               )}
               <button
                 className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 w-full"
-                onClick={closeModal}
+                onClick={() => setShowModal(false)}
               >
                 Close
               </button>
@@ -192,54 +184,71 @@ const Index = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {leaderboard.map((player, index) => (
-                <div key={index} className="glass-card p-4 hover-glow">
-                  <div className="flex justify-between items-center cursor-pointer md:cursor-default" onClick={() => togglePlayerEvents(player.player)}>
-                    <div className="text-2xl font-bold text-yellow-400 mb-2">#{index + 1}</div>
-                    <div className="text-lg font-semibold">{player.player}</div>
-                    <div className="md:hidden">
-                      {expandedPlayer === player.player ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                <div key={index} className="glass-card p-4 hover-glow flex items-start">
+                  <div className="flex-1">
+                    <div
+                      className="flex items-center cursor-pointer md:cursor-default"
+                      onClick={() => togglePlayerTournaments(player.player)}
+                    >
+                      <div className="text-2xl font-bold text-yellow-400 mr-4" style={{ alignSelf: 'flex-start' }}>
+                        #{index + 1}
+                      </div>
+                      <div className="text-lg font-semibold">{player.player}</div>
+                      <div className="md:hidden">
+                        {expandedPlayer === player.player ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                      </div>
+                    </div>
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedPlayer === player.player || window.innerWidth >= 768 ? "max-h-40" : "max-h-0"
+                        }`}
+                    >
+                      <ul className="list-disc list-inside text-gray-300 mt-2">
+                        {player.events.map((tournament, idx) => (
+                          <li key={idx}>{tournament}</li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
-                  <div
-                    className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedPlayer === player.player || window.innerWidth >= 768 ? "max-h-40" : "max-h-0"
-                      }`}
-                  >
-                    <ul className="list-disc list-inside text-gray-300 mt-2">
-                      {player.events.map((event, idx) => (
-                        <li key={idx}>{event}</li>
-                      ))}
-                    </ul>
-                  </div>
+                  {/* Conditionally render skin image based on expanded state */}
+                  <img
+                    src={`https://minotar.net/armor/body/${player.player}/100.png`}
+                    alt={`${player.player}'s skin`}
+                    className={`w-20 ml-4 ${expandedPlayer === player.player ? 'block' : 'hidden md:block'}`}
+                  />
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Past Events Section */}
+        {/* Past Tournaments Section */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6 text-center">Past Events</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            {pastEvents.map((event, index) => (
-              <div key={index} className="glass-card hover-glow">
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold mb-2">{event.event_name}</h3>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-gray-400" />
-                    <span className="text-gray-300">{event.date}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Trophy className="w-4 h-4 text-yellow-400" />
-                    <span className="text-gray-300">Winner: {event.winner}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-green-400" />
-                    <span className="text-gray-300">Prize Pool: {event.pts}</span>
+          <h2 className="text-2xl font-bold mb-6 text-center">Past Tournaments</h2>
+          {data.pastTournaments && data.pastTournaments.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+              {data.pastTournaments.map((tournament, index) => (
+                <div key={index} className="glass-card hover-glow">
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold mb-2">{tournament.tournament_name}</h3>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-gray-400" />
+                      <span className="text-gray-300">{tournament.date}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Trophy className="w-4 h-4 text-yellow-400" />
+                      <span className="text-gray-300">Winner: {tournament.winner}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <DollarSign className="w-4 h-4 text-green-400" />
+                      <span className="text-gray-300">Prize Pool: {tournament.score}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p>No past tournaments available.</p>
+          )}
         </div>
       </div>
     </div>

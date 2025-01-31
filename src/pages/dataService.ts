@@ -23,7 +23,7 @@ export function calculateLeaderboard(pastEvents) {
                 events: []
             };
         }
-        leaderboard[winner].events.push(event.event_name);
+        leaderboard[winner].events.push(event.tournament_name);
     });
 
     return Object.values(leaderboard);

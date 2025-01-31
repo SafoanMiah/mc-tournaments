@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navigation = () => {
   const links = [
-    { name: "Events", icon: <Trophy className="w-4 h-4" />, path: "/" },
+    { name: "Tournaments", icon: <Trophy className="w-4 h-4" />, path: "/" },
     { name: "Rules", icon: <Book className="w-4 h-4" />, path: "/rules" },
     { name: "Sponsor", icon: <DollarSign className="w-4 h-4" />, path: "/sponsor" },
   ];
@@ -13,7 +13,7 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="text-xl font-bold text-white md:text-lg">
-            Saf's Event Hub
+            Saf's Tournament Hub
           </Link>
           <div className="flex space-x-8">
             {links.map((link) => (

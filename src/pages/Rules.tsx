@@ -6,42 +6,42 @@ const rules = [
   {
     title: "Entry & Seat Types",
     icon: <Users className="w-6 h-6 text-blue-400" />,
-    content: "If an event is not sponsored, participants may register as either a paid or free seat. If an event is sponsored, all participants compete on equal terms for the prize."
+    content: "If a tournament is not sponsored, participants may register as either a paid or free seat. If a tournament is sponsored, all participants compete on equal terms for the prize."
   },
   {
     title: "Entry Limits & Alternate Accounts",
     icon: <Ban className="w-6 h-6 text-red-400" />,
-    content: "One entry per participant per event. Alternate accounts (alts) are strictly prohibited. Detection of alts results in immediate disqualification and a three-event ban."
+    content: "One entry per participant per tournament. Alternate accounts (alts) are strictly prohibited. Detection of alts results in immediate disqualification and a three-tournament ban."
   },
   {
     title: "Prize Distribution & Eligibility",
     icon: <DollarSign className="w-6 h-6 text-green-400" />,
-    content: "Only the highest-ranking paid seat can win in non-sponsored events. Free-seat participants cannot claim the prize."
+    content: "Only the highest-ranking paid seat can win in non-sponsored tournaments. Free-seat participants cannot claim the prize."
   },
   {
     title: "Prize Pool Carry-Over",
     icon: <DollarSign className="w-6 h-6 text-green-400" />,
-    content: "If no paid-seat participant wins, the prize pool carries over to the next event."
+    content: "If no paid-seat participant wins, the prize pool carries over to the next tournament."
   },
   {
     title: "Prize Payment",
     icon: <DollarSign className="w-6 h-6 text-green-400" />,
-    content: "100% of the prize pool will be paid out. If a prize cannot be paid immediately, it will be allocated to a future event."
+    content: "100% of the prize pool will be paid out. If a prize cannot be paid immediately, it will be allocated to a future tournament."
   },
   {
     title: "Fair Play & Cheating",
     icon: <Shield className="w-6 h-6 text-blue-400" />,
-    content: "Cheating, hacking, and unfair advantages are prohibited. Violations include using external software/hacks, exploiting unintended game mechanics, and collusion/team play in solo events. Any violation results in permanent disqualification."
+    content: "Cheating, hacking, and unfair advantages are prohibited. Violations include using external software/hacks, exploiting unintended game mechanics, and collusion/team play in solo tournaments. Any violation results in permanent disqualification."
   },
   {
     title: "Gameplay Monitoring & Review",
     icon: <Clock className="w-6 h-6 text-orange-400" />,
-    content: "All gameplay is recorded via Minecraft Replay Mod. Winner’s gameplay is publicly reviewed for compliance. Rule violations in reviewed footage lead to penalties."
+    content: "All gameplay is recorded via Minecraft Replay Mod. Winner's gameplay is publicly reviewed for compliance. Rule violations in reviewed footage lead to penalties."
   },
   {
     title: "Exploits & Unintended Mechanics",
     icon: <Ban className="w-6 h-6 text-red-400" />,
-    content: "Game-breaking exploits are prohibited. Bypassing the challenge results in a three-event ban."
+    content: "Game-breaking exploits are prohibited. Bypassing the challenge results in a three-tournament ban."
   }
 ];
 
@@ -51,7 +51,7 @@ const Rules = () => (
     <div className="pt-24 pb-12 container mx-auto px-4 ">
       <div className="glass-card p-8 text-center animate-fade-in ">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-          Event Rules
+          Tournament Rules
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           {rules.map((rule, index) => (
