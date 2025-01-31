@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trophy, Clock, Users, DollarSign, Award, Calendar } from "lucide-react";
+import { Trophy, Clock, Users, DollarSign, Award, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 import Navigation from "../components/Navigation";
 import { fetchData, calculateLeaderboard } from "./dataService";
 
@@ -23,6 +23,7 @@ const Index = () => {
   const [pastEvents, setPastEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState<{ title: string; message: React.ReactNode; link: string }>({ title: "", message: "", link: "" });
+  const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadData() {
@@ -87,6 +88,10 @@ const Index = () => {
     setShowModal(false);
   };
 
+  const togglePlayerEvents = (playerName: string) => {
+    setExpandedPlayer(expandedPlayer === playerName ? null : playerName);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -96,30 +101,24 @@ const Index = () => {
         <div
           className="glass-card p-8 text-center animate-fade-in relative overflow-hidden"
           style={{
-            backgroundImage: `
-              linear-gradient(45deg, rgba(0, 0, 0, 0.7) 25%, transparent 25%),
-              linear-gradient(-45deg, rgba(0, 0, 0, 0.7) 25%, transparent 25%),
-              linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.7) 75%),
-              linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.7) 75%)
-            `,
-            backgroundSize: '20px 20px',
-            backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px'
+            backgroundImage: `url('/public/main-bg-1.webp')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-purple-500/10 mix-blend-overlay"></div>
 
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text relative z-10">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-yellow-300 text-transparent bg-clip-text relative z-10">
             {ongoing ? event_name : "No Active Events"}
           </h1>
 
           {/* Description */}
           <div className="mb-12 mt-1 w-1/2 mx-auto">
-            <div className="text-gray-400 whitespace-pre-wrap font-semibold">{ongoing ? description : ""}</div>
+            <div className="text-gray-200 whitespace-pre-wrap font-semibold">{ongoing ? description : ""}</div>
           </div>
 
           {/* Countdown Timer */}
           <div className="mb-12 mt-12">
-            {/* <div className="text-gray-400 font-bold">EVENT ENDS IN</div> */}
             <div className="text-5xl md:text-7xl font-bold text-white m-2">{timeLeft}</div>
           </div>
 
@@ -169,7 +168,7 @@ const Index = () => {
                   href={modalContent.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full block text-center mb-2"
+                  className="bg-gradient-to-r from-blue-400 to-purple-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full block text-center mb-2"
                 >
                   Go to Link
                 </a>
@@ -194,14 +193,23 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {leaderboard.map((player, index) => (
                 <div key={index} className="glass-card p-4 hover-glow">
-                  <div className="text-2xl font-bold text-yellow-400 mb-2">#{index + 1}</div>
-                  <div className="text-lg font-semibold">{player.player}</div>
-                  <div className="text-gray-400">{player.wins} wins</div>
-                  <ul className="list-disc list-inside text-gray-300">
-                    {player.events.map((event, idx) => (
-                      <li key={idx}>{event}</li>
-                    ))}
-                  </ul>
+                  <div className="flex justify-between items-center cursor-pointer md:cursor-default" onClick={() => togglePlayerEvents(player.player)}>
+                    <div className="text-2xl font-bold text-yellow-400 mb-2">#{index + 1}</div>
+                    <div className="text-lg font-semibold">{player.player}</div>
+                    <div className="md:hidden">
+                      {expandedPlayer === player.player ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                    </div>
+                  </div>
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedPlayer === player.player || window.innerWidth >= 768 ? "max-h-40" : "max-h-0"
+                      }`}
+                  >
+                    <ul className="list-disc list-inside text-gray-300 mt-2">
+                      {player.events.map((event, idx) => (
+                        <li key={idx}>{event}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               ))}
             </div>

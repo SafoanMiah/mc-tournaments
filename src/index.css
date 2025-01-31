@@ -40,6 +40,31 @@
   }
 
   .hover-glow {
-    @apply transition-all duration-300 hover:shadow-[0_0_15px_rgba(14, 165, 233, 0.5)];
+    transition: box-shadow 0.3s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 10px rgba(56, 152, 255, 0.397), 0 0 15px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Add this CSS to your existing styles */
+.transition-all {
+  transition: max-height 0.3s ease-in-out;
+}
+
+.max-h-0 {
+  max-height: 0;
+}
+
+.max-h-40 {
+  max-height: 10rem;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .max-h-40 {
+    max-height: none;
+    /* Show full content on larger screens */
   }
 }

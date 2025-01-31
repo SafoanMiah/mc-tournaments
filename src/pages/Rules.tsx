@@ -46,10 +46,10 @@ const rules = [
 ];
 
 const Rules = () => (
-  <div className="min-h-screen bg-background">
+  <div className="min-h-screen bg-background ">
     <Navigation />
-    <div className="pt-24 pb-12 container mx-auto px-4">
-      <div className="glass-card p-8 text-center animate-fade-in">
+    <div className="pt-24 pb-12 container mx-auto px-4 ">
+      <div className="glass-card p-8 text-center animate-fade-in ">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
           Event Rules
         </h1>

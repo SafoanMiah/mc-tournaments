@@ -24,8 +24,8 @@ const Sponsor = () => {
       <Navigation />
 
       <div className="pt-24 pb-12 container mx-auto px-4">
-        <div className="glass-card p-8 text-center animate-fade-in relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-purple-500/10 mix-blend-overlay"></div>
+        <div className="glass-card p-8 text-center animate-fade-in relative overflow-hidden shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-700/10 to-gray-700/10 mix-blend-overlay"></div>
 
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text relative z-10">
             Sponsor An Event
@@ -37,50 +37,38 @@ const Sponsor = () => {
 
           <form
             onSubmit={handleSubmit}
-            className="max-w-lg mx-auto space-y-6 bg-white/10 p-6 rounded-2xl backdrop-blur-lg shadow-lg border border-white/20"
+            className="max-w-lg mx-auto space-y-6 bg-white/10 p-6 rounded-2xl backdrop-blur-lg shadow-lg border border-white/20 hover:shadow-white/20 transition-shadow duration-300"
           >
-            <div className="relative">
-              <label className="block text-gray-300 mb-2">Discord Username</label>
-              <input
-                type="text"
-                value={discordUsername}
-                onChange={(e) => setDiscordUsername(e.target.value)}
-                className="w-full p-3 bg-transparent border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-300 mb-2">Name of Event</label>
-              <input
-                type="text"
-                value={eventName}
-                onChange={(e) => setEventName(e.target.value)}
-                className="w-full p-3 bg-transparent border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-300 mb-2">Value of Prize (us dollars)</label>
-              <input
-                type="text"
-                value={prizeValue}
-                onChange={(e) => setPrizeValue(e.target.value)}
-                className="w-full p-3 bg-transparent border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
-                required
-              />
-            </div>
+            {[
+              { label: "Discord Username", value: discordUsername, setter: setDiscordUsername },
+              { label: "Name of Event", value: eventName, setter: setEventName },
+              { label: "Value of Prize ($)", value: prizeValue, setter: setPrizeValue }
+            ].map((field, index) => (
+              <div key={index} className="relative">
+                <label className="block text-gray-300 mb-2">{field.label}</label>
+                <input
+                  type="text"
+                  value={field.value}
+                  onChange={(e) => field.setter(e.target.value)}
+                  className="w-full p-3 bg-transparent border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400 transition-all hover:border-white"
+                  required
+                />
+              </div>
+            ))}
+
             <div>
               <label className="block text-gray-300 mb-2">Description of Event</label>
               <textarea
                 value={eventDescription}
                 onChange={(e) => setEventDescription(e.target.value)}
-                className="w-full p-3 bg-transparent border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400"
+                className="w-full p-3 bg-transparent border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-gray-400 transition-all hover:border-white"
                 required
               />
             </div>
+
             <Button
               type="submit"
-              className="w-full mt-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg hover:shadow-lg transition-shadow duration-300"
+              className="w-full mt-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg hover:scale-105 backdrop-blur-lg transition-all duration-500"
             >
               Send Email
             </Button>

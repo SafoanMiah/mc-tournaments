@@ -3,11 +3,11 @@
         "ongoing": true,
         "event_name": "First Event Placeholder",
         "description": "Sample description, this is a test, with another sample description, and just one more sample description",
-        "timer": "2025-02-30T00:00:00Z",
+        "timer": "2025-02-03T00:00:00Z",
         "entry": 0,
         "sponsored": true,
         "sponsored_by": "Saf",
-        "prizePool": 15,
+        "prizePool": 20,
         "freeSeatLink": "https://ptb.discord.com/channels/1331351023704473691/1334664421678518293",
         "paidSeatLink": "placeholder_for_paid_seat_link"
     },
@@ -16,42 +16,42 @@
             "event_name": "Placeholder Event 1",
             "date": "2024-08-01",
             "description": "Sample description, this is a test",
-            "winner": "Placeholder Winner 1",
+            "winner": "DrSaf",
             "pts": 3000
         },
         {
             "event_name": "Placeholder Event 2",
             "date": "2024-08-01",
             "description": "Sample description, this is a test",
-            "winner": "Placeholder Winner 1",
+            "winner": "DrSaf",
             "pts": 2500
         },
         {
             "event_name": "Placeholder Event 3",
             "date": "2024-08-01",
             "description": "Sample adsasdescription, this is a test",
-            "winner": "Placeholder Winner 3",
+            "winner": "Shennaine",
             "pts": 4000
         },
         {
             "event_name": "Placeholder Event 4",
             "date": "2024-08-01",
             "description": "Sample description, this is a test",
-            "winner": "Placeholder Winner 4",
+            "winner": "Ainyra",
             "pts": 4000
         },
         {
             "event_name": "Placeholder Event 5",
             "date": "2024-08-01",
             "description": "Sample description, this is a test",
-            "winner": "Placeholder Winner 1",
+            "winner": "DrSaf",
             "pts": 4000
         },
         {
             "event_name": "Placeholder Event 6",
             "date": "2024-08-01",
             "description": "Sample description, this is a test",
-            "winner": "Placeholder Winner 3",
+            "winner": "Shennaine",
             "pts": 4000
         }
     ]

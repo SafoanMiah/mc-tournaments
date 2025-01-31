@@ -13,23 +13,18 @@ export async function fetchData() {
 }
 
 export function calculateLeaderboard(pastEvents) {
-    const leaderboardMap = new Map();
+    const leaderboard = {};
 
     pastEvents.forEach(event => {
-        const { winner, event: eventName } = event;
-        if (leaderboardMap.has(winner)) {
-            const winnerData = leaderboardMap.get(winner);
-            winnerData.wins += 1;
-            winnerData.events.push(eventName);
-        } else {
-            leaderboardMap.set(winner, { wins: 1, events: [eventName] });
+        const winner = event.winner;
+        if (!leaderboard[winner]) {
+            leaderboard[winner] = {
+                player: winner,
+                events: []
+            };
         }
+        leaderboard[winner].events.push(event.event_name);
     });
 
-    const leaderboard = Array.from(leaderboardMap.entries())
-        .map(([player, { wins, events }]) => ({ player, wins, events }))
-        .sort((a, b) => b.wins - a.wins)
-        .slice(0, 3); // Get top 3
-
-    return leaderboard;
+    return Object.values(leaderboard);
 } 
