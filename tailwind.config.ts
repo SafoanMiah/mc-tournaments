@@ -85,6 +85,9 @@ export default {
         "fade-in": "fade-in 0.3s ease-out",
         "fade-out": "fade-out 0.3s ease-out",
       },
+      fontSize: {
+        '4.5xl': '2.5rem',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

@@ -169,7 +169,7 @@ const Index = () => {
 
           {/* Countdown Timer */}
           <div className="mb-12 mt-12">
-            <div className={`text-5xl md:text-7xl font-bold m-2 ${status === "ending" ? "text-yellow-400" : "text-white"}`}>{timeLeft}</div>
+            <div className={`text-4xl md:text-7xl font-bold m-2 ${status === "ending" ? "text-yellow-400" : "text-white"}`}>{timeLeft}</div>
             <div className="text-xl font-semibold text-gray-300">{statusMessage}</div>
           </div>
 
