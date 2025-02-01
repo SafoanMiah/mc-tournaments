@@ -13,9 +13,9 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Trophy className="w-6 h-6 text-white mr-2" />
+            <img src="/favicon.ico" alt="Main Background" className="w-8 h-8 mr-2" />
             <Link to="/" className="text-xl font-bold text-white md:text-lg">
-              Saf's Tournament Hub
+              Saf's Tourneys
             </Link>
           </div>
           <div className="flex space-x-8">
