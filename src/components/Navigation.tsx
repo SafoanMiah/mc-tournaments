@@ -1,5 +1,6 @@
 import { Trophy, Book, DollarSign } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const Navigation = () => {
   const links = [
@@ -32,6 +33,7 @@ const Navigation = () => {
           </div>
         </div>
       </div>
+      <SpeedInsights />
     </nav>
   );
 };
