@@ -83,7 +83,16 @@ const Index = () => {
   }, []);
 
   if (!currentEvent) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="loader mb-4"></div>
+          <div className="w-64 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div className="bg-blue-600 h-2.5 rounded-full progress-bar"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const { status, tournament_name, description, end_time, entry_fee, is_sponsored, prize_pool, sponsored_by } = currentEvent;
