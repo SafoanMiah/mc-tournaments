@@ -93,7 +93,7 @@ const Index = () => {
         <div
           className="glass-card p-8 text-center animate-fade-in relative overflow-hidden"
           style={{
-            backgroundImage: `url('/public/main-bg-1.webp')`,
+            backgroundImage: `url('/main-bg-1.webp')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}
