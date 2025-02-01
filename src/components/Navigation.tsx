@@ -12,9 +12,12 @@ const Navigation = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card" style={{ borderRadius: '0' }}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="text-xl font-bold text-white md:text-lg">
-            Saf's Tournament Hub
-          </Link>
+          <div className="flex items-center">
+            <Trophy className="w-6 h-6 text-white mr-2" />
+            <Link to="/" className="text-xl font-bold text-white md:text-lg">
+              Saf's Tournament Hub
+            </Link>
+          </div>
           <div className="flex space-x-8">
             {links.map((link) => (
               <Link
