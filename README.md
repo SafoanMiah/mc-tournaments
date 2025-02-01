@@ -1,17 +1,20 @@
 # Saf's Tournament Hub
 ### Site: [drsaf.xyz](drsaf.xyz)
 
-Welcome to my Tournament Hub, a comprehensive platform designed to host, run, and manage Minecraft tournaments. This project leverages modern web technologies to provide a seamless experience for both organizers and participants.
+Welcome to my Tournament Hub, a platform for running, and managing custom Minecraft tournaments. 
+This project was made by me primarily for a server for me and some friends of mine however it quickly became much bigger the more I got into it!
 
 ## Features
 
-- [x] **Real-time Tournament Management**: Easily manage ongoing and upcoming tournaments with real-time updates.
+- [x] **Real-time Tournament Management**: Manage ongoing and upcoming tournaments with real-time updates.
 - [x] **Leaderboard**: Automatically calculate and display player rankings based on their performance in tournaments.
 - [x] **Event Countdown**: Display a countdown timer for tournament start and end times.
 - [x] **Sponsorship Integration**: Support for sponsored tournaments with customizable prize pools.
 - [x] **Responsive Design**: Optimized for both desktop and mobile devices.
 - [x] **Interactive UI**: Built with React and Tailwind CSS for a dynamic and engaging user interface.
 - [x] **Supabase Integration**: Utilizes Supabase for database management, ensuring data consistency and reliability.
+
+![image](https://github.com/user-attachments/assets/4135ea57-9105-4f32-9881-ab489fa3932a)
 
 ## Purpose
 
@@ -77,6 +80,8 @@ This table structure is designed to efficiently store and manage tournament data
    ```sh
    npm run dev
    ```
+
+![image](https://github.com/user-attachments/assets/3673f119-2871-4ed9-863b-a33902e22437)
 
 ## Contribution
 
