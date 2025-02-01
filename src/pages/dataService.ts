@@ -27,8 +27,8 @@ export async function fetchData() {
 }
 
 export function calculateLeaderboard(tournaments): LeaderboardEntry[] {
-    // Filter out tournaments with "No Winner"
-    const validTournaments = tournaments.filter(tournament => tournament.winner !== "No Winner");
+    // Filter out tournaments with NULL or empty winner
+    const validTournaments = tournaments.filter(tournament => tournament.winner);
 
     // Calculate leaderboard based on valid tournaments
     const leaderboard = validTournaments.reduce((acc: Record<string, LeaderboardEntry>, tournament) => {
@@ -45,5 +45,6 @@ export function calculateLeaderboard(tournaments): LeaderboardEntry[] {
     const sortedLeaderboard = Object.values(leaderboard) as LeaderboardEntry[];
     sortedLeaderboard.sort((a, b) => b.totalPoints - a.totalPoints);
 
-    return sortedLeaderboard;
+    // Limit to top 3 entries
+    return sortedLeaderboard.slice(0, 3);
 }

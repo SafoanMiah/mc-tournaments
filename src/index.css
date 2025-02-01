@@ -68,3 +68,7 @@
     /* Show full content on larger screens */
   }
 }
+
+.expandable {
+  flex-grow: 1;
+}

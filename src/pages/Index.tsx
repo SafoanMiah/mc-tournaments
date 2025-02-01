@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Trophy, Clock, Users, Coins, Award, Calendar, ChevronDown, ChevronUp, List } from "lucide-react";
 import Navigation from "../components/Navigation";
 import { fetchData, calculateLeaderboard } from "./dataService";
@@ -26,6 +26,7 @@ const Index = () => {
   const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState("0d 0h 0m 0s");
   const [statusMessage, setStatusMessage] = useState("");
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const currentEvent = data.tournaments.find(tournament => tournament.status) || data.tournaments[data.tournaments.length - 1];
 
@@ -64,6 +65,22 @@ const Index = () => {
 
     return () => clearInterval(interval);
   }, [currentEvent]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.imageSmoothingEnabled = false;
+
+        const img = new Image();
+        img.src = "https://minecraft-api.vercel.app/images/items/diamond_pickaxe.png";
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+      }
+    }
+  }, []);
 
   if (!currentEvent) {
     return <div>Loading...</div>;
@@ -227,11 +244,8 @@ const Index = () => {
                         #{index + 1}
                       </div>
                       <div className="text-lg font-semibold">{player.player}</div>
-                      <div className="text-sm text-gray-400 ml-2">({player.totalPoints} points)</div>
-                      <div className="md:hidden">
-                        {expandedPlayer === player.player ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                      </div>
                     </div>
+                    <div className="text-sm text-gray-400 ml-0">({player.totalPoints} points)</div>
                     <div
                       className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedPlayer === player.player || window.innerWidth >= 768 ? "max-h-40" : "max-h-0"
                         }`}
@@ -243,7 +257,6 @@ const Index = () => {
                       </ul>
                     </div>
                   </div>
-                  {/* Conditionally render skin image based on expanded state */}
                   <img
                     src={`https://minotar.net/armor/body/${player.player}/100.png`}
                     alt={`${player.player}'s skin`}
@@ -264,35 +277,46 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             {data.tournaments
               .filter(tournament => !tournament.status)
-              .sort((a, b) => new Date(b.end_time).getTime() - new Date(a.end_time).getTime()) // Sort by end_time descending
+              .sort((a, b) => new Date(b.end_time).getTime() - new Date(a.end_time).getTime())
               .map((tournament, index) => {
                 const startDate = new Date(tournament.start_time);
                 const endDate = new Date(tournament.end_time);
-                const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)); // Duration in days
+                const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+
+                const itemName = tournament.item || 'default_item';
+                const imageUrl = `https://minecraft-api.vercel.app/images/items/${itemName}.png`;
 
                 return (
-                  <div key={index} className="glass-card hover-glow p-4">
-                    <h3 className="text-lg font-semibold mb-2">{tournament.tournament_name}</h3>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-300">{tournament.end_time.split('T')[0]}</span>
+                  <div key={index} className="glass-card hover-glow p-4 flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold mb-2">{tournament.tournament_name}</h3>
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <span className="text-gray-300">{tournament.end_time.split('T')[0]}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-blue-400" />
+                        <span className="text-gray-300">{duration} days</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Trophy className="w-4 h-4 text-yellow-400" />
+                        <span className="text-gray-300">Winner: {tournament.winner || "No Winner"}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Coins className="w-4 h-4 text-green-400" />
+                        <span className="text-gray-300">Prize Pool: {tournament.prize_pool}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Award className="w-4 h-4 text-red-400" />
+                        <span className="text-gray-300">Points: {tournament.points}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-blue-400" />
-                      <span className="text-gray-300">{duration} days</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Trophy className="w-4 h-4 text-yellow-400" />
-                      <span className="text-gray-300">Winner: {tournament.winner || "No Winner"}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Coins className="w-4 h-4 text-green-400" />
-                      <span className="text-gray-300">Prize Pool: {tournament.prize_pool}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Award className="w-4 h-4 text-red-400" />
-                      <span className="text-gray-300">Points: {tournament.points}</span>
-                    </div>
+                    <img
+                      src={imageUrl}
+                      alt={itemName}
+                      className="h-4/5 ml-4 self-center"
+                      style={{ imageRendering: 'pixelated' }}
+                    />
                   </div>
                 );
               })}

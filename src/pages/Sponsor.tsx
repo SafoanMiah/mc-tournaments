@@ -31,7 +31,7 @@ const Sponsor = () => {
           </h1>
 
           <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-            You can also DM <span className="text-blue-400 font-semibold">@drsaf</span> on Discord to discuss it further.
+            If you need any help or want to discuss it further; please dm <span className="text-blue-400 font-semibold">@drsaf</span> (me) on discord! Happy to help in any way I can.
           </p>
 
           <form
