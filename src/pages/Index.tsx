@@ -1,56 +1,88 @@
 import { useState, useEffect } from "react";
-import { Trophy, Clock, Users, DollarSign, Award, Calendar, ChevronDown, ChevronUp } from "lucide-react";
+import { Trophy, Clock, Users, Coins, Award, Calendar, ChevronDown, ChevronUp, List } from "lucide-react";
 import Navigation from "../components/Navigation";
 import { fetchData, calculateLeaderboard } from "./dataService";
 
-function calculateTimeLeft(timer: string) {
-  const tournamentDate = new Date(timer);
+function calculateTimeLeft(targetTime: string) {
+  const targetDate = new Date(targetTime);
   const currentDate = new Date();
-  const difference = tournamentDate.getTime() - currentDate.getTime();
+  const difference = targetDate.getTime() - currentDate.getTime();
 
-  if (difference <= 0) return "0d 0h 0m";
+  if (difference <= 0) return "0d 0h 0m 0s";
 
   const days = Math.floor(difference / (1000 * 60 * 60 * 24));
   const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
   const minutes = Math.floor((difference / (1000 * 60)) % 60);
+  const seconds = Math.floor((difference / 1000) % 60);
 
-  return `${days}d ${hours}h ${minutes}m`;
+  return `${days}d ${hours}h ${minutes}m ${seconds}s`;
 }
 
 const Index = () => {
-  const [data, setData] = useState({ tournament: null, pastTournaments: [] });
+  const [data, setData] = useState({ tournaments: [] });
   const [leaderboard, setLeaderboard] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState<{ title: string; message: React.ReactNode; link: string }>({ title: "", message: "", link: "" });
   const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState("0d 0h 0m 0s");
+  const [statusMessage, setStatusMessage] = useState("");
+
+  const currentEvent = data.tournaments.find(tournament => tournament.status) || data.tournaments[data.tournaments.length - 1];
 
   useEffect(() => {
     async function loadData() {
       const fetchedData = await fetchData();
       if (fetchedData) {
-        setData(fetchedData);
-        setLeaderboard(calculateLeaderboard(fetchedData.pastTournaments));
+        setData({ tournaments: fetchedData });
+        setLeaderboard(calculateLeaderboard(fetchedData));
+      } else {
+        console.error('No data fetched');
       }
     }
     loadData();
   }, []);
 
-  if (!data.tournament) {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (currentEvent) {
+        const { status, start_time, end_time } = currentEvent;
+        let newTimeLeft = "0d 0h 0m 0s";
+        let newStatusMessage = "";
+
+        if (status === "starting") {
+          newTimeLeft = calculateTimeLeft(start_time);
+          newStatusMessage = "STARTING IN";
+        } else if (status === "ending") {
+          newTimeLeft = calculateTimeLeft(end_time);
+          newStatusMessage = "ENDING IN";
+        }
+
+        setTimeLeft(newTimeLeft);
+        setStatusMessage(newStatusMessage);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [currentEvent]);
+
+  if (!currentEvent) {
     return <div>Loading...</div>;
   }
 
-  const { ongoing, tournament_name, description, timer, entry, sponsored, prizePool, freeSeatLink, paidSeatLink } = data.tournament;
+  const { status, tournament_name, description, end_time, entry_fee, is_sponsored, prize_pool, sponsored_by } = currentEvent;
 
-  const timeLeft = ongoing ? calculateTimeLeft(timer) : "0d 0h 0m";
-  const prizePoolDisplay = ongoing ? `$${prizePool}` : "$0";
-  const entryFeeDisplay = ongoing ? `$${entry}` : "$0";
+  const prize_poolDisplay = status === "ending" ? `$${prize_pool}` : "$0";
+  const entryFeeDisplay = status === "ending" ? `$${entry_fee}` : "#0";
+
+  const FreeSeatLink = "https://ptb.discord.com/channels/1331351023704473691/1334664421678518293"
+  const PaidSeatLink = "placeholder_for_paid_seat_link"
 
   const handleFreeSeatClick = () => {
-    if (sponsored) {
+    if (is_sponsored) {
       setModalContent({
         title: "Join Instructions",
         message: "Follow instructions in the #join channel to enter, you must re-enter every tournament.",
-        link: freeSeatLink
+        link: FreeSeatLink
       });
     } else {
       setModalContent({
@@ -62,14 +94,14 @@ const Index = () => {
             Follow instructions in the #join channel to enter, you must re-enter every tournament.
           </>
         ),
-        link: freeSeatLink
+        link: FreeSeatLink
       });
     }
     setShowModal(true);
   };
 
   const handlePaidSeatClick = () => {
-    if (sponsored) {
+    if (is_sponsored) {
       setModalContent({
         title: "Notice",
         message: "Cannot enter as paid in sponsored tournaments.",
@@ -100,33 +132,34 @@ const Index = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-purple-500/10 mix-blend-overlay"></div>
 
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-yellow-300 text-transparent bg-clip-text relative z-10">
-            {ongoing ? tournament_name : "No Active Tournaments"}
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-red-400 to-purple-500 text-transparent bg-clip-text relative z-10">
+            {status ? tournament_name : "No Active Tournaments"}
           </h1>
 
           {/* Description */}
           <div className="mb-12 mt-1 w-1/2 mx-auto">
-            <div className="text-gray-200 whitespace-pre-wrap font-semibold">{ongoing ? description : ""}</div>
+            <div className="text-gray-200 whitespace-pre-wrap font-semibold">{status ? description : ""}</div>
           </div>
 
           {/* Countdown Timer */}
           <div className="mb-12 mt-12">
-            <div className="text-5xl md:text-7xl font-bold text-white m-2">{timeLeft}</div>
+            <div className={`text-5xl md:text-7xl font-bold m-2 ${status === "ending" ? "text-yellow-400" : "text-white"}`}>{timeLeft}</div>
+            <div className="text-xl font-semibold text-gray-300">{statusMessage}</div>
           </div>
 
           {/* Tournament Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="flex items-center justify-center space-x-3">
               <Users className="w-6 h-6 text-green-400" />
-              <span className="text-xl">Sponsor: {sponsored ? data.tournament.sponsored_by : "No Sponsor"}</span>
+              <span className="text-xl">Sponsor: {is_sponsored ? sponsored_by : "No Sponsor"}</span>
             </div>
             <div className="flex items-center justify-center space-x-3">
               <Trophy className="w-6 h-6 text-yellow-400" />
-              <span className="text-xl">Prize Pool: {prizePoolDisplay}</span>
+              <span className="text-xl">Prize Pool: {prize_poolDisplay}</span>
             </div>
             <div className="flex items-center justify-center space-x-3">
               <Users className="w-6 h-6 text-green-400" />
-              <span className="text-xl">Entry: {entryFeeDisplay === "$0" ? "Free" : entryFeeDisplay}</span>
+              <span className="text-xl">Entry: {entryFeeDisplay === "$0" ? "$0" : entryFeeDisplay}</span>
             </div>
           </div>
 
@@ -135,14 +168,14 @@ const Index = () => {
             <button
               className="glass-card hover-glow px-8 py-4 text-lg font-semibold text-white"
               onClick={handleFreeSeatClick}
-              disabled={!ongoing}
+              disabled={status !== "ending"}
             >
               Enter as Free Seat
             </button>
             <button
               className="glass-card hover-glow px-8 py-4 text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-500 text-white"
               onClick={handlePaidSeatClick}
-              disabled={!ongoing}
+              disabled={status !== "ending"}
             >
               Enter as Paid Seat
             </button>
@@ -194,6 +227,7 @@ const Index = () => {
                         #{index + 1}
                       </div>
                       <div className="text-lg font-semibold">{player.player}</div>
+                      <div className="text-sm text-gray-400 ml-2">({player.totalPoints} points)</div>
                       <div className="md:hidden">
                         {expandedPlayer === player.player ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                       </div>
@@ -223,32 +257,46 @@ const Index = () => {
 
         {/* Past Tournaments Section */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6 text-center">Past Tournaments</h2>
-          {data.pastTournaments && data.pastTournaments.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-              {data.pastTournaments.map((tournament, index) => (
-                <div key={index} className="glass-card hover-glow">
-                  <div className="p-4">
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <List className="w-6 h-6 text-gray-400" />
+            <h2 className="text-2xl font-bold">Past Tournaments</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            {data.tournaments
+              .filter(tournament => !tournament.status)
+              .sort((a, b) => new Date(b.end_time).getTime() - new Date(a.end_time).getTime()) // Sort by end_time descending
+              .map((tournament, index) => {
+                const startDate = new Date(tournament.start_time);
+                const endDate = new Date(tournament.end_time);
+                const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)); // Duration in days
+
+                return (
+                  <div key={index} className="glass-card hover-glow p-4">
                     <h3 className="text-lg font-semibold mb-2">{tournament.tournament_name}</h3>
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-300">{tournament.date}</span>
+                      <span className="text-gray-300">{tournament.end_time.split('T')[0]}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-blue-400" />
+                      <span className="text-gray-300">{duration} days</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Trophy className="w-4 h-4 text-yellow-400" />
-                      <span className="text-gray-300">Winner: {tournament.winner}</span>
+                      <span className="text-gray-300">Winner: {tournament.winner || "No Winner"}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <DollarSign className="w-4 h-4 text-green-400" />
-                      <span className="text-gray-300">Prize Pool: {tournament.score}</span>
+                      <Coins className="w-4 h-4 text-green-400" />
+                      <span className="text-gray-300">Prize Pool: {tournament.prize_pool}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Award className="w-4 h-4 text-red-400" />
+                      <span className="text-gray-300">Points: {tournament.points}</span>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p>No past tournaments available.</p>
-          )}
+                );
+              })}
+          </div>
         </div>
       </div>
     </div>

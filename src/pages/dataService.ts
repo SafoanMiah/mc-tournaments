@@ -1,10 +1,24 @@
+import { supabase } from '../supabaseClient';
+
+type LeaderboardEntry = {
+    player: string;
+    totalPrize: number;
+    totalPoints: number;
+    events: string[];
+};
+
 export async function fetchData() {
     try {
-        const response = await fetch('/data.json');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+        const { data, error } = await supabase
+            .from('tournaments_private') // Ensure this is the correct table name
+            .select('*');
+
+        if (error) {
+            console.error('Supabase Error:', error);
+            throw error;
         }
-        const data = await response.json();
+
+        console.log('Fetched Data:', data); // Log the fetched data
         return data;
     } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -12,19 +26,24 @@ export async function fetchData() {
     }
 }
 
-export function calculateLeaderboard(pastEvents) {
-    const leaderboard = {};
+export function calculateLeaderboard(tournaments): LeaderboardEntry[] {
+    // Filter out tournaments with "No Winner"
+    const validTournaments = tournaments.filter(tournament => tournament.winner !== "No Winner");
 
-    pastEvents.forEach(event => {
-        const winner = event.winner;
-        if (!leaderboard[winner]) {
-            leaderboard[winner] = {
-                player: winner,
-                events: []
-            };
+    // Calculate leaderboard based on valid tournaments
+    const leaderboard = validTournaments.reduce((acc: Record<string, LeaderboardEntry>, tournament) => {
+        const { winner, points } = tournament;
+        if (!acc[winner]) {
+            acc[winner] = { player: winner, totalPrize: 0, totalPoints: 0, events: [] };
         }
-        leaderboard[winner].events.push(event.tournament_name);
-    });
+        acc[winner].totalPoints += points;
+        acc[winner].events.push(tournament.tournament_name);
+        return acc;
+    }, {});
 
-    return Object.values(leaderboard);
-} 
+    // Convert to array and sort by totalPoints descending
+    const sortedLeaderboard = Object.values(leaderboard) as LeaderboardEntry[];
+    sortedLeaderboard.sort((a, b) => b.totalPoints - a.totalPoints);
+
+    return sortedLeaderboard;
+}

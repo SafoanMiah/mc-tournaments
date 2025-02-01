@@ -24,10 +24,9 @@ const Sponsor = () => {
       <Navigation />
 
       <div className="pt-24 pb-12 container mx-auto px-4">
-        <div className="glass-card p-8 text-center animate-fade-in relative overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-700/10 to-gray-700/10 mix-blend-overlay"></div>
+        <div className="glass-card p-8 text-center animate-fade-in ">
 
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text relative z-10">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-red-400 to-purple-500 text-transparent bg-clip-text relative z-10">
             Sponsor An Event
           </h1>
 

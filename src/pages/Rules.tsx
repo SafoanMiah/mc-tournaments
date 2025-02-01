@@ -50,7 +50,7 @@ const Rules = () => (
     <Navigation />
     <div className="pt-24 pb-12 container mx-auto px-4 ">
       <div className="glass-card p-8 text-center animate-fade-in ">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-red-400 to-purple-500 text-transparent bg-clip-text">
           Tournament Rules
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
@@ -63,7 +63,7 @@ const Rules = () => (
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-300">{rule.content}</p>
+                <p className="text-gray-400">{rule.content}</p>
               </CardContent>
             </Card>
           ))}
