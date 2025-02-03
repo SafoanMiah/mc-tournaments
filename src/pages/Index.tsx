@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Trophy, Clock, Users, Coins, Award, Calendar, ChevronDown, ChevronUp, List } from "lucide-react";
+import { Trophy, Clock, Users, Coins, Award, Calendar, ChevronDown, ChevronUp, List, DollarSign } from "lucide-react";
 import Navigation from "../components/Navigation";
 import { fetchData, calculateLeaderboard } from "./dataService";
 
@@ -312,11 +312,11 @@ const Index = () => {
                         <span className="text-gray-300">Winner: {tournament.winner || "No Winner"}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Coins className="w-4 h-4 text-green-400" />
+                        <DollarSign className="w-4 h-4 text-green-400" />
                         <span className="text-gray-300">Prize Pool: {tournament.prize_pool}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Award className="w-4 h-4 text-red-400" />
+                        <Coins className="w-4 h-4 text-red-400" />
                         <span className="text-gray-300">Points: {tournament.points}</span>
                       </div>
                     </div>
