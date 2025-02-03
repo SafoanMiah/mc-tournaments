@@ -98,7 +98,7 @@ const Index = () => {
   const { status, tournament_name, description, end_time, entry_fee, is_sponsored, prize_pool, sponsored_by } = currentEvent;
 
   const prize_poolDisplay = status === "ending" ? `$${prize_pool}` : "$0";
-  const entryFeeDisplay = status === "ending" ? `$${entry_fee}` : "#0";
+  const entryFeeDisplay = status === "ending" ? `$${entry_fee}` : "Free";
 
   const FreeSeatLink = "https://ptb.discord.com/channels/1331351023704473691/1334664421678518293"
   const PaidSeatLink = "placeholder_for_paid_seat_link"
@@ -185,7 +185,7 @@ const Index = () => {
             </div>
             <div className="flex items-center justify-center space-x-3">
               <Users className="w-6 h-6 text-green-400" />
-              <span className="text-xl">Entry: {entryFeeDisplay === "$0" ? "$0" : entryFeeDisplay}</span>
+              <span className="text-xl">Entry: {entryFeeDisplay === "$0" ? "Free" : entryFeeDisplay}</span>
             </div>
           </div>
 
