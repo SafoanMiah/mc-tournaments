@@ -7,7 +7,7 @@ const items = [
   "iron_pickaxe",
   "golden_apple",
   "ender_pearl",
-  "nether_star",
+  "golden_hoe",
   "emerald",
   "redstone",
   "lapis_lazuli",
